@@ -178,7 +178,7 @@ textarea:focus{outline:none;box-shadow:0 0 0 2.5px var(--accent)}
 /* her answers go to Samyak's Google Form, which fills his "Bhavana date picks (Responses)" sheet */
 const FORM = "https://docs.google.com/forms/d/e/1FAIpQLSfFR8_DIRNbCpGozhnlXxpp-4p3F9NvU3EgKaHpIMlRZ1sB8A/formResponse";
 const F = {status:"entry.1521330860", day:"entry.309795441", dinner:"entry.863558512", dessert:"entry.2019354707", at:"entry.1036678623", note:"entry.1133042577"};
-const DAYS = [{id:"wed", day:"Wednesday", date:"25 Nov"},{id:"thu", day:"Thursday", date:"26 Nov"}];
+const DAYS = [{id:"wed", day:"Wednesday", date:"25 Nov"},{id:"fri", day:"Friday", date:"27 Nov"}];
 const PLACES = [
   {id:"social", name:"Sarjapur SOCIAL", area:"Sarjapur Road", blurb:"Playful, loud in a fun way, and famous for its thick shakes.", tags:["Comfort food","Epic shakes"], icon:"shake", col:"var(--mango)", maps:"Sarjapur SOCIAL, Sarjapur Road, Bengaluru",
    desserts:[
@@ -343,7 +343,7 @@ const screens = {
     <h2>First, we get our hands a little messy.</h2>
     <p class="sub">Couple pottery on the wheel at Thirdspace Art Café, Koramangala. We each take home something we made. Wonky pots are very much encouraged.</p>
     <p class="q">Which evening is ours?</p>
-    <div class="grid2">${DAYS.map(d => `<button class="day ${S.day===d.id?"sel":""}" data-day="${d.id}" aria-pressed="${S.day===d.id}"><small>${d.day==="Wednesday"?"Midweek treat":"Almost-weekend"}</small><b>${d.day.slice(0,3)}</b><span>${d.date}, 4 PM-ish</span></button>`).join("")}</div>`,
+    <div class="grid2">${DAYS.map(d => `<button class="day ${S.day===d.id?"sel":""}" data-day="${d.id}" aria-pressed="${S.day===d.id}"><small>${d.day==="Wednesday"?"Midweek treat":"Weekend kickoff"}</small><b>${d.day.slice(0,3)}</b><span>${d.date}, 4 PM-ish</span></button>`).join("")}</div>`,
     `<button class="btn" data-go="dinner" ${S.day?"":"disabled"}>Lock it in ${ic.arrow}</button>`],
 
   dinner: () => [`<div class="hero">${art.dinner}</div>
@@ -378,7 +378,7 @@ const screens = {
     ${LIVE ? `<div class="sent">${ic.check} Sent to Samyak</div>` : `<div class="sent" style="background:var(--muted)">Preview only: answers save from the live link</div>`}
     ${ticketHtml(true)}
     <button class="link" id="restart">Want to change something?</button>`,
-    `<button class="btn alt" id="again">See you ${S.day==="wed"?"Wednesday":"Thursday"} ${ic.heart.replace("<svg","<svg width='20' height='20'")}</button>`]
+    `<button class="btn alt" id="again">See you ${S.day==="wed"?"Wednesday":"Friday"} ${ic.heart.replace("<svg","<svg width='20' height='20'")}</button>`]
 };
 function ticketHtml(bare){
   const p = place() || PLACES[0];
