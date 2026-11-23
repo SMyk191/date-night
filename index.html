@@ -114,7 +114,44 @@ textarea:focus{outline:none;box-shadow:0 0 0 2.5px var(--accent)}
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:8;overflow:hidden}
 .confetti svg{position:absolute;top:-30px;width:18px;height:18px;animation:fallc 3s ease-in forwards}
 @keyframes fallc{to{transform:translateY(112vh) rotate(540deg)}}
-@media(prefers-reduced-motion:reduce){.bgfx svg,.confetti,.pop{display:none}.enter,.bob,.spin,.float,.twinkle{animation:none;opacity:1}}
+.peek{animation:peek 3.2s ease-in-out infinite}
+@keyframes peek{0%,100%{transform:translateY(14px)}50%{transform:translateY(-6px)}}
+.beat{animation:beat 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes beat{0%,40%,100%{transform:scale(1)}20%{transform:scale(1.18)}30%{transform:scale(.96)}}
+.grow{animation:grow 1.1s cubic-bezier(.3,1.5,.5,1) both;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes grow{from{transform:scaleY(.25) scaleX(1.3)}}
+.throw{animation:throw 2.6s 1.1s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes throw{50%{transform:scaleY(1.05) scaleX(.97)}}
+.swirl{animation:spin 1.4s linear infinite}
+.fling{animation:fling 1.8s ease-out infinite;opacity:0;transform-box:fill-box}
+@keyframes fling{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),-26px)}}
+.steam{stroke-dasharray:60;animation:steam 2.4s ease-in-out infinite;opacity:0}
+@keyframes steam{0%{opacity:0;stroke-dashoffset:60;transform:translateY(6px)}40%{opacity:.9}100%{opacity:0;stroke-dashoffset:0;transform:translateY(-14px)}}
+.flame{animation:flick .35s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes flick{to{transform:scaleY(1.15) scaleX(.88) skewX(4deg)}}
+.glow{animation:glow 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes glow{50%{transform:scale(1.35);opacity:.12}}
+.drip{animation:drip 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
+@keyframes drip{0%,100%{transform:scaleY(.4)}60%{transform:scaleY(1.5)}}
+.sprinkle{animation:sprinkle 3s linear infinite}
+@keyframes sprinkle{from{transform:translateY(0) rotate(0)}to{transform:translateY(240px) rotate(300deg)}}
+.hop{animation:hop 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes hop{0%,100%{transform:translateY(0) scale(1,1)}20%{transform:translateY(0) scale(1.08,.92)}45%{transform:translateY(-14px) scale(.96,1.05)}70%{transform:translateY(0) scale(1.04,.96)}}
+.blink{animation:blink 3.4s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.printin{animation:printin .8s cubic-bezier(.2,.9,.3,1) both}
+@keyframes printin{from{clip-path:inset(0 0 100% 0);transform:translateY(-12px)}to{clip-path:inset(0 0 0 0)}}
+.stamp{animation:stamp .55s .7s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes stamp{from{opacity:0;transform:translateY(-50%) scale(2.4) rotate(-25deg)}to{opacity:1;transform:translateY(-50%) scale(1) rotate(-8deg)}}
+.stops li{animation:slidein .5s cubic-bezier(.2,.9,.3,1) both}
+.stops li:nth-child(1){animation-delay:.5s}.stops li:nth-child(2){animation-delay:.7s}.stops li:nth-child(3){animation-delay:.9s}
+@keyframes slidein{from{opacity:0;transform:translateX(18px)}}
+.pick,.day{will-change:transform}
+.pick.sel .ic{animation:wiggle .5s ease}
+@keyframes wiggle{30%{transform:rotate(-10deg) scale(1.08)}60%{transform:rotate(8deg)}}
+.fade{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}}
+@media(prefers-reduced-motion:reduce){.bgfx svg,.confetti,.pop{display:none}.enter,.bob,.spin,.float,.twinkle,.peek,.beat,.grow,.throw,.swirl,.steam,.flame,.glow,.drip,.sprinkle,.hop,.blink,.printin,.stamp,.stops li,.fling,.fade,.pick.sel .ic{animation:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -183,55 +220,71 @@ const dayText = () => { const d = DAYS.find(x => x.id === S.day); return d ? `${
 const heart = (x, y, s, fill, cls, delay) => `<use href="#h" x="${x}" y="${y}" width="${s}" height="${s}" fill="${fill}" class="${cls||""}" style="animation-delay:${delay||0}s"/>`;
 const spark = (x, y, s, fill, delay) => `<use href="#spark" x="${x}" y="${y}" width="${s}" height="${s}" fill="${fill}" class="twinkle" style="animation-delay:${delay||0}s"/>`;
 const art = {
-  pottery: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A pot spinning on a pottery wheel">
+  letter: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A love letter with a heart seal">
+    <rect width="320" height="220" fill="#ffd9e4"/><circle cx="160" cy="116" r="94" fill="#ffc2d4"/>
+    ${spark(36,36,16,"#fff",0)}${spark(268,50,14,"#fff",.7)}${spark(276,160,18,"#ff8fb0",1.3)}${spark(28,158,12,"#ff8fb0",.3)}
+    <ellipse cx="160" cy="196" rx="96" ry="8" fill="#f3a9bf"/>
+    <g class="bob">
+      <g class="peek"><rect x="88" y="58" width="144" height="70" rx="8" fill="#fff"/>
+        <path d="M104 74h92M104 86h66M104 98h80" stroke="#ffc2d4" stroke-width="5" stroke-linecap="round"/></g>
+      <rect x="74" y="92" width="172" height="98" rx="14" fill="#ff6992"/>
+      <path d="M74 106l86 52 86-52v70a14 14 0 0 1-14 14H88a14 14 0 0 1-14-14z" fill="#ff3d73"/>
+      <path d="M74 106l86 52 86-52" stroke="#d92a5c" stroke-width="3" fill="none" stroke-linejoin="round"/>
+      <circle cx="160" cy="152" r="20" fill="#fff"/><g class="beat">${heart(148,140,24,"#ff3d73")}</g>
+    </g>
+    ${heart(206,58,18,"#ff3d73","float",0)}${heart(108,52,14,"#ff6992","float",1.1)}${heart(226,80,12,"#ff3d73","float",2)}
+  </svg>`,
+  pottery: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A pot rising on a spinning pottery wheel">
     <rect width="320" height="220" fill="#ffd9e4"/><circle cx="160" cy="118" r="92" fill="#ffc2d4"/>
     ${spark(40,40,16,"#fff",0)}${spark(262,58,12,"#fff",.8)}${spark(272,150,18,"#ff8fb0",1.4)}${spark(30,150,12,"#ff8fb0",.4)}
     <ellipse cx="160" cy="206" rx="104" ry="8" fill="#f3a9bf"/>
     <path d="M118 160h84l12 44H106z" fill="#5b2a3c"/><path d="M118 160h14l-12 44h-14z" fill="#fff" opacity=".12"/>
     <ellipse cx="160" cy="160" rx="96" ry="19" fill="#7a3a52"/><ellipse cx="160" cy="156" rx="96" ry="19" fill="#9c4f6c"/>
     <ellipse class="spin" cx="160" cy="156" rx="78" ry="14" fill="none" stroke="#ffd0de" stroke-width="3" stroke-dasharray="12 16"/>
-    <g class="bob"><path d="M126 156c-13-26-10-50 10-62-5-10-3-17 4-21h40c7 4 9 11 4 21 20 12 23 36 10 62z" fill="url(#clay)"/>
+    <g class="grow"><g class="throw"><path d="M126 156c-13-26-10-50 10-62-5-10-3-17 4-21h40c7 4 9 11 4 21 20 12 23 36 10 62z" fill="url(#clay)"/>
+      <path class="swirl" d="M130 120c20 6 40 6 60 0M128 136c22 6 42 6 64 0" stroke="#fff" stroke-opacity=".35" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="8 10"/>
       <path d="M134 98c-14 12-16 34-6 54" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <ellipse cx="160" cy="73" rx="20" ry="5" fill="#9a4226"/>
-      ${heart(147,108,26,"#fff")}</g>
-    ${heart(150,40,16,"#ff3d73","float",0)}${heart(170,48,12,"#ff6992","float",1)}${heart(140,52,10,"#ff3d73","float",2)}
+      <ellipse cx="160" cy="73" rx="20" ry="5" fill="#9a4226"/></g></g>
+    ${[0,1,2,3].map(k=>`<circle class="fling" cx="${k%2?210:110}" cy="${150 - k*6}" r="${3+k%2}" fill="#d8784c" style="animation-delay:${k*.45}s;--dx:${k%2?28:-28}px"/>`).join("")}
   </svg>`,
-  letter: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A love letter with a heart seal">
-    <rect width="320" height="220" fill="#ffd9e4"/><circle cx="160" cy="116" r="94" fill="#ffc2d4"/>
-    ${spark(36,36,16,"#fff",0)}${spark(268,50,14,"#fff",.7)}${spark(276,160,18,"#ff8fb0",1.3)}${spark(28,158,12,"#ff8fb0",.3)}
-    <ellipse cx="160" cy="196" rx="96" ry="8" fill="#f3a9bf"/>
-    <g class="bob">
-      <rect x="84" y="66" width="152" height="40" rx="8" fill="#fff" transform="rotate(-6 160 86)"/>
-      <path d="M100 78h96M100 90h70" stroke="#ffc2d4" stroke-width="5" stroke-linecap="round" transform="rotate(-6 160 86)"/>
-      <rect x="74" y="92" width="172" height="98" rx="14" fill="#ff6992"/>
-      <path d="M74 106l86 52 86-52v70a14 14 0 0 1-14 14H88a14 14 0 0 1-14-14z" fill="#ff3d73"/>
-      <path d="M74 106l86 52 86-52" stroke="#d92a5c" stroke-width="3" fill="none" stroke-linejoin="round"/>
-      <circle cx="160" cy="152" r="20" fill="#fff"/>${heart(148,140,24,"#ff3d73")}
-    </g>
-    ${heart(206,58,18,"#ff3d73","float",0)}${heart(108,52,14,"#ff6992","float",1.1)}${heart(226,80,12,"#ff3d73","float",2)}
-  </svg>`,
-  dinner: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A dinner table for two">
+  dinner: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A candlelit dinner table for two">
     <rect width="320" height="220" fill="#ffe6c9"/>
     <path d="M0 26 Q80 56 160 30 T320 28" stroke="#c98f5a" stroke-width="2" fill="none"/>
     ${[30,72,114,156,198,240,282].map((x,i)=>`<circle cx="${x}" cy="${40 + (i%2?-4:6)}" r="7" fill="${i%2?"#ffb648":"#ff8fb0"}" class="twinkle" style="animation-delay:${i*.3}s"/>`).join("")}
     <ellipse cx="160" cy="176" rx="150" ry="34" fill="#ffd2a8"/><ellipse cx="160" cy="170" rx="150" ry="34" fill="#fff4ea"/>
     <ellipse cx="104" cy="166" rx="40" ry="13" fill="#fff" stroke="#f3c8a3" stroke-width="3"/><ellipse cx="104" cy="164" rx="24" ry="7" fill="#ffb648"/>
     <ellipse cx="216" cy="166" rx="40" ry="13" fill="#fff" stroke="#f3c8a3" stroke-width="3"/><ellipse cx="216" cy="164" rx="24" ry="7" fill="#38c08f"/>
+    ${[96,112,208,224].map((x,k)=>`<path class="steam" d="M${x} 150c-6-8 6-14 0-22s6-14 0-22" stroke="#e8b892" stroke-width="3" fill="none" stroke-linecap="round" style="animation-delay:${k*.5}s"/>`).join("")}
     <rect x="153" y="112" width="14" height="46" rx="4" fill="#fff" stroke="#f3c8a3" stroke-width="2"/>
-    <path class="bob" d="M160 90c8 8 8 18 0 22-8-4-8-14 0-22z" fill="#ffb648"/>
-    ${heart(60,92,22,"#ff3d73","float",0)}${heart(240,96,18,"#ff6992","float",1.2)}
+    <circle cx="160" cy="100" r="16" fill="#ffb648" opacity=".25" class="glow"/>
+    <path class="flame" d="M160 90c8 8 8 18 0 22-8-4-8-14 0-22z" fill="#ffb648"/>
   </svg>`,
-  cake: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A slice of chocolate cake">
+  cake: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A chocolate cake slice with dripping ganache">
     <rect width="320" height="220" fill="#f6d6c8"/><circle cx="160" cy="120" r="88" fill="#efbfa9"/>
-    ${spark(46,44,16,"#fff",0)}${spark(262,40,12,"#fff",.9)}${spark(270,160,16,"#c9785b",1.5)}
+    ${[50,90,230,270,130,200].map((x,k)=>`<rect class="sprinkle" x="${x}" y="-10" width="4" height="10" rx="2" fill="${["#ff3d73","#ffb648","#38c08f","#6aa8ff"][k%4]}" style="animation-delay:${k*.6}s;animation-duration:${2.6+k%3*.5}s"/>`).join("")}
     <ellipse cx="160" cy="190" rx="110" ry="12" fill="#e0a891"/>
-    <g class="bob"><path d="M78 176l150-64 18 64z" fill="#3e1c14"/>
-      <path d="M78 176h168v14H78z" fill="url(#choc)"/>
-      <path d="M78 150h168v12H78z" fill="#f7c1a6" opacity=".9" transform="translate(0 14)"/>
+    <g class="bob"><path d="M78 176h168v14H78z" fill="url(#choc)"/>
       <path d="M78 176L228 112c6 10 10 22 18 64z" fill="url(#choc)"/>
       <path d="M78 176L228 112" stroke="#8a4a32" stroke-width="6" stroke-linecap="round"/>
-      <path d="M120 158c0 10 6 12 6 4M170 137c0 12 6 14 6 4M205 122c0 10 5 12 5 3" stroke="#5a2a1c" stroke-width="6" stroke-linecap="round" fill="none"/>
-      ${heart(212,84,30,"#ff3d73")}</g>
+      ${[[120,158],[170,137],[205,122]].map(([x,y],k)=>`<path class="drip" d="M${x} ${y}v14" stroke="#5a2a1c" stroke-width="6" stroke-linecap="round" style="animation-delay:${k*.7}s"/>`).join("")}
+      <g class="beat">${heart(212,84,30,"#ff3d73")}</g></g>
+  </svg>`,
+  yay: `<svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Two happy little pots side by side">
+    <rect width="320" height="220" fill="#ffd9e4"/><circle cx="160" cy="120" r="92" fill="#ffc2d4"/>
+    ${spark(36,40,16,"#fff",0)}${spark(272,44,14,"#fff",.6)}${spark(280,150,16,"#ff8fb0",1.1)}${spark(26,150,14,"#ff8fb0",.3)}
+    <ellipse cx="160" cy="196" rx="110" ry="9" fill="#f3a9bf"/>
+    <g class="hop" style="animation-delay:0s"><path d="M84 192c-12-22-10-44 8-54-4-8-2-14 3-17h34c5 3 7 9 3 17 18 10 20 32 8 54z" fill="url(#clay)"/>
+      <ellipse cx="112" cy="121" rx="17" ry="4" fill="#9a4226"/>
+      <g class="blink"><circle cx="102" cy="160" r="4" fill="#3e1c14"/><circle cx="122" cy="160" r="4" fill="#3e1c14"/></g>
+      <circle cx="96" cy="170" r="5" fill="#ff8fb0" opacity=".7"/><circle cx="128" cy="170" r="5" fill="#ff8fb0" opacity=".7"/>
+      <path d="M106 170q6 6 12 0" stroke="#3e1c14" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
+    <g class="hop" style="animation-delay:.35s"><path d="M186 192c-10-20-9-38 6-48-3-7-2-12 2-15h30c4 3 5 8 2 15 15 10 16 28 6 48z" fill="#ff8a6a"/>
+      <ellipse cx="211" cy="129" rx="15" ry="4" fill="#c4533a"/>
+      <g class="blink" style="animation-delay:.6s"><circle cx="202" cy="164" r="4" fill="#3e1c14"/><circle cx="220" cy="164" r="4" fill="#3e1c14"/></g>
+      <circle cx="196" cy="174" r="5" fill="#ff8fb0" opacity=".7"/><circle cx="226" cy="174" r="5" fill="#ff8fb0" opacity=".7"/>
+      <path d="M205 173q6 6 12 0" stroke="#3e1c14" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
+    <g class="beat">${heart(146,96,28,"#ff3d73")}</g>
+    ${heart(150,70,14,"#ff6992","float",0)}${heart(166,78,10,"#ff3d73","float",.9)}${heart(140,82,10,"#ff3d73","float",1.8)}
   </svg>`
 };
 const ic = {
@@ -316,7 +369,7 @@ const screens = {
     <textarea id="note" placeholder="Allergies, cravings, or a song for the ride">${esc(S.note)}</textarea>`,
     `<p class="err" id="err" role="alert"></p><button class="btn" id="confirm">It's a date! ${ic.arrow}</button>`],
 
-  done: () => [`<div class="hero">${art.pottery}</div>
+  done: () => [`<div class="hero">${art.yay}</div>
     <h1>Yay! It's a date.</h1>
     <p class="sub">Your picks just flew straight to me. Now I'll sort the bookings, and you only have to show up looking cute and ready to get a little clay on your hands.</p>
     <div class="sent">${ic.check} Sent to Samyak</div>
@@ -328,8 +381,8 @@ function ticketHtml(bare){
   const p = place() || PLACES[0];
   return `${bare ? "" : `<span class="kicker">Our evening</span>
     <h2>Here's how it goes.</h2>`}
-    <div class="ticket">
-      <div class="top"><small>Admit two</small><b>${dayText()}</b><svg viewBox="0 0 24 24"><use href="#h" fill="#fff" opacity=".9"/></svg></div>
+    <div class="ticket printin">
+      <div class="top"><small>Admit two</small><b>${dayText()}</b><svg class="stamp" viewBox="0 0 24 24"><use href="#h" fill="#fff" opacity=".9"/></svg></div>
       <div class="perf"></div>
       <ul class="stops">
         <li><span class="dot" style="background:#ff8fb0">${ic.wheel}</span><span><small>4 PM-ish</small><b>Pottery at Thirdspace Art Café</b></span></li>
@@ -361,14 +414,27 @@ function popHeart(e){
   s.innerHTML = '<use href="#h"/>'; s.style.left = x + "px"; s.style.top = y + "px";
   document.body.appendChild(s); setTimeout(() => s.remove(), 850);
 }
+/* select in place: no redraw, so nothing flickers */
+function choose(e, t, sel){
+  stage.querySelectorAll(sel).forEach(el => { const on = el === t; el.classList.toggle("sel", on); el.setAttribute("aria-pressed", on); });
+  const b = cta.querySelector(".btn"); if (b) b.disabled = false;
+  popHeart(e); save();
+}
+function swapDesserts(){
+  const fresh = document.createElement("div"); fresh.innerHTML = screens.dessert()[0];
+  const cur = stage.querySelector(".enter");
+  ["h2", ".sub", ".list", "#glens"].forEach(q => { const a = cur.querySelector(q), b = fresh.querySelector(q); if (a && b){ a.replaceWith(b); b.classList.add("fade"); } });
+  const btn = cta.querySelector(".btn"); if (btn) btn.disabled = true;
+  save();
+}
 function onClick(e){
   const t = e.target.closest("button,a");
   if (!t || t.disabled) return;
   if (t.dataset.go) return go(t.dataset.go);
-  if (t.dataset.day){ S.day = t.dataset.day; popHeart(e); return render(); }
-  if (t.dataset.place){ if (S.place !== t.dataset.place){ S.dessert = ""; S.at = ""; S.glens = false; } S.place = t.dataset.place; popHeart(e); return render(); }
-  if (t.dataset.dessert){ S.dessert = t.dataset.dessert; S.at = t.dataset.at; popHeart(e); return render(); }
-  if (t.id === "glens"){ S.glens = !S.glens; S.dessert = ""; S.at = ""; return render(); }
+  if (t.dataset.day){ S.day = t.dataset.day; return choose(e, t, "[data-day]"); }
+  if (t.dataset.place){ if (S.place !== t.dataset.place){ S.dessert = ""; S.at = ""; S.glens = false; } S.place = t.dataset.place; return choose(e, t, "[data-place]"); }
+  if (t.dataset.dessert){ S.dessert = t.dataset.dessert; S.at = t.dataset.at; return choose(e, t, "[data-dessert]"); }
+  if (t.id === "glens"){ S.glens = !S.glens; S.dessert = ""; S.at = ""; return swapDesserts(); }
   if (t.id === "restart"){ return go("pottery"); }
   if (t.id === "confirm") return confirmPicks(e);
   if (t.id === "again"){ popHeart(e); burst(); }
