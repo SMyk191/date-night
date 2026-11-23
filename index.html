@@ -300,7 +300,10 @@ const ic = {
 };
 
 /* ---------- recording her answers ---------- */
+/* answers only save from the real link; the claude.ai preview can't reach Google */
+const LIVE = /github\.io$/.test(location.hostname) || /[?&]live\b/.test(location.search);
 function record(status){
+  if (!LIVE) return Promise.resolve("preview");
   const p = place();
   const body = new URLSearchParams();
   body.append(F.status, status);
@@ -372,7 +375,7 @@ const screens = {
   done: () => [`<div class="hero">${art.yay}</div>
     <h1>Yay! It's a date.</h1>
     <p class="sub">Your picks just flew straight to me. Now I'll sort the bookings, and you only have to show up looking cute and ready to get a little clay on your hands.</p>
-    <div class="sent">${ic.check} Sent to Samyak</div>
+    ${LIVE ? `<div class="sent">${ic.check} Sent to Samyak</div>` : `<div class="sent" style="background:var(--muted)">Preview only: answers save from the live link</div>`}
     ${ticketHtml(true)}
     <button class="link" id="restart">Want to change something?</button>`,
     `<button class="btn alt" id="again">See you ${S.day==="wed"?"Wednesday":"Thursday"} ${ic.heart.replace("<svg","<svg width='20' height='20'")}</button>`]
